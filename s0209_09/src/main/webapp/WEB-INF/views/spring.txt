@@ -1,0 +1,149 @@
+1. https://spring.io/tools#eclipse
+
+   ECLIPSE - 5.0.0-WINDOW X86_64
+
+   * JDK 설치 필수
+
+2. help > Eclipse Marketplace > java and web 검색후 설치
+
+   JPA 항목 2개 체크 
+
+3. 톰캣 서버에서 실행하기 위해 Eclipse Enterprise Java and Web Developer Tools 설치
+
+window - preference -> enc - text - utf-8
+
+# Spring 주요기능 
+   * Ioc (Inversion of Control) 컨테이너 : 객체보관  -->  DI(의존성) : 객체 사용
+
+
+
+4. https://mvnrepository.com/
+
+springframework
+
+
+5. https://mvnrepository.com/artifact/org.springframework/spring-context/6.1.21
+
+webapp/WEB-INF/views
+
+
+
+<!-- JSP 템플릿 엔진 -->
+<dependency>
+<groupId>org.apache.tomcat.embed</groupId>
+<artifactId>tomcat-embed-jasper</artifactId>
+</dependency>
+<!-- JSTL 사용 -->
+<dependency>
+<groupId>jakarta.servlet.jsp.jstl</groupId>
+<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+<version>3.0.0</version>
+</dependency>
+<!-- jakarta.servlet/jakarta.servlet-api -->
+<dependency>
+<groupId>jakarta.servlet</groupId>
+<artifactId>jakarta.servlet-api</artifactId>
+<version>6.0.0</version>
+<scope>provided</scope>
+</dependency>
+<!-- jakarta.servlet.jsp.jstl -->
+<dependency>
+<groupId>org.glassfish.web</groupId>
+<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+<version>3.0.1</version>
+</dependency>
+
+
+
+6. lombok 다운로드
+
+java -jar lombok.jar
+
+
+
+# jsp 위치 설정 #
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+# 포트 설정 #
+server.port = 8080
+# oracle DB 설정 #
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521/xe
+spring.datasource.username=ora_user
+spring.datasource.password=1111
+
+
+
+http://localhost:8181/
+
+
+html : get, post
+
+
+
+[프로젝트 생성 순서]
+
+1. 프로젝트 생성
+2. 폴더 생성
+webapp/WEB-INF/views
+
+3. application.properties 설정
+# jsp 위치 설정 #
+spring.mvc.view.prefix=/WEB-INF/views/
+spring.mvc.view.suffix=.jsp
+
+# 포트 설정 #
+server.port = 8181
+
+# oracle DB 설정 #
+#spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+#spring.datasource.url=jdbc:oracle:thin:@localhost:1521/xe
+#spring.datasource.username=ora_user
+#spring.datasource.password=1111
+
+3. pom.xml 설정
+<!-- 추가 -->
+		<!-- JSP 템플릿 엔진 -->
+		<dependency>
+		<groupId>org.apache.tomcat.embed</groupId>
+		<artifactId>tomcat-embed-jasper</artifactId>
+		</dependency>
+		
+		<!-- JSTL 사용 -->
+		<dependency>
+		<groupId>jakarta.servlet.jsp.jstl</groupId>
+		<artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
+		<version>3.0.0</version>
+		</dependency>
+		
+		<!-- jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+		<groupId>jakarta.servlet</groupId>
+		<artifactId>jakarta.servlet-api</artifactId>
+		<version>6.0.0</version>
+		<scope>provided</scope>
+		</dependency>
+		
+		<!-- jakarta.servlet.jsp.jstl -->
+		<dependency>
+		<groupId>org.glassfish.web</groupId>
+		<artifactId>jakarta.servlet.jsp.jstl</artifactId>
+		<version>3.0.1</version>
+		</dependency>
+
+4. controller 생성
+- com.java 폴더 아래로 패키지 생성
+- com.java.controller 패키지 생성후
+@Controller 붙여줌.
+@GetMapping("/")
+public String index() {
+	return "index";
+}
+
+
+
+# SpringToolsForEclipse.ini 메모장으로 등록
+-javaagent:C:\sts5\lombok.jar
+
+
+
