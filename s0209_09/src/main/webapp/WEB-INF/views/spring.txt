@@ -8,6 +8,14 @@
 
    JPA 항목 2개 체크 
 
+
+3.
+C:\sts5
+# SpringToolsForEclipse.ini 메모장으로 등록
+-javaagent:C:\sts5\lombok.jar
+
+
+
 3. 톰캣 서버에서 실행하기 위해 Eclipse Enterprise Java and Web Developer Tools 설치
 
 window - preference -> enc - text - utf-8
@@ -131,6 +139,23 @@ server.port = 8181
 		<version>3.0.1</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter</artifactId>
+			<version>4.0.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mybatis.spring.boot</groupId>
+			<artifactId>mybatis-spring-boot-starter-test</artifactId>
+			<version>4.0.1</version>
+			<scope>test</scope>
+		</dependency>
+
 4. controller 생성
 - com.java 폴더 아래로 패키지 생성
 - com.java.controller 패키지 생성후
@@ -141,9 +166,6 @@ public String index() {
 }
 
 
-
-# SpringToolsForEclipse.ini 메모장으로 등록
--javaagent:C:\sts5\lombok.jar
 
 
 
