@@ -80,6 +80,11 @@ spring.datasource.url=jdbc:oracle:thin:@localhost:1521/xe
 spring.datasource.username=ora_user
 spring.datasource.password=1111
 
+# Mapper.java 파일이 위치한 경로 - Applicaton_config.java
+#mybatis.type-aliases-package=com.java.dao
+# Mapper.xml 파일이 위치한 경로
+#mybatis.mapper-locations=mapper/**/*.xml
+
 
 
 http://localhost:8181/
