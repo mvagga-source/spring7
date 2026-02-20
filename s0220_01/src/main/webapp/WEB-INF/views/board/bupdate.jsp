@@ -8,32 +8,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Pages - 글수정</title>
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,500,700,900&display=swap&subset=korean" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/read.css">
+  <link rel="stylesheet" href="/css/write.css">
+  
+  <script>
+  	if('${session_id}'== null || '${session_id}'== ''){
+  		alert("로그인을 하셔야 글쓰기가 가능합니다.");
+  		location.href="/member/login";
+  	}
+  </script>
+  
 </head>
 
 <body>
   <header>
     <ul>
-		<c:if test="${session_id == null}">
-			<li><a href="/member/join01">회원가입</a></li><span>|</span>
-			<li><a href="/member/login">로그인</a></li><span>|</span>
-		</c:if>
-		<c:if test="${session_id != null}">
-			<li><a href="/member/mupdate">${session_name}님</a></li><span>|</span>
-			<li><a onclick="logoutBtn()">로그아웃</a></li><span>|</span>
-		</c:if>
-		<li><a href="/board/blist">고객행복센터</a></li><span>|</span>
+      <li>회원가입</li> <span>|</span>
+      <li>로그인</li> <span>|</span>
+      <li>고객행복센터</li> <span>|</span>
       <li>배송지역검색</li> <span>|</span>
       <li>기프트카드 등록</li>
     </ul>
   </header>
 
   <nav>
-    <div class="logo"></div>
+    <a href="/"><div class="logo"></div></a>
 
     <div id="search">
       <div class="search"></div><br>
@@ -57,54 +58,58 @@
   </nav>
 
   <section>
-    <h1>NOTICE</h1>
+    <h1>글쓰기</h1>
+    <hr>
 
-    <table>
-      <tr>
-        <th>${board.btitle}</th>
-      </tr>
-      <tr>
-        <td>
-	        <fmt:formatDate value="${board.bdate}" pattern="yyyy-MM-dd"/>
-        </td>
-      </tr>
-      <tr>
-        <td class="article">
-${board.bcontent}
-        </td>
-      </tr>
-      <tr>
-        <td><strong>다음글</strong> <span class="separator">|</span> [키즈잼] 2월 프로그램 안내</td>
-      </tr>
-      <tr>
-        <td><strong>이전글</strong> <span class="separator">|</span> [키즈잼] 2020년 1분기 정기 휴관일 안내</td>
-      </tr>
-    </table>
+    <form action="/board/bupdate</c:if>" name="write" method="post" >
+      <input type="hidden" name="bno" value="${board.bno}">
+      <input type="hidden" name="bfile_old" value="${board.bfile}">
+      <table>
+        <colgroup>
+          <col width="15%">
+          <col width="85%">
+        </colgroup>
+        <tr>
+          <th>아이디</th>
+          <td>
+            <div class="category-wrapper">
+				${session_id}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>제목</th>
+          <td>
+            <input type="text" name="btitle" value="${board.btitle}">
+          </td>
+        </tr>
+        <tr>
+          <th>내용</th>
+          <td>
+            <textarea name="bcontent" cols="50" rows="10" >${board.bcontent}</textarea>
+          </td>
+        </tr>
+        <tr>
+          <th>이미지 표시</th>
+          <td>
+            <input type="file" name="bfile" id="file">
+          </td>
+        </tr>
+        <tr>
+          <th>기존 이미지 표시</th>
+          <td>
+            <img src="" />
+          </td>
+        </tr>
+      </table>
+      <hr>
+      <div class="button-wrapper">
+        <button type="submit" class="write">작성완료</button>
+        <button type="button" onclick="javascript:history.back();" class="cancel">취소</button>
+      </div>
+    </form>
 
-    <a onclick="javascript:history.back();"><div class="list">목록</div></a>
-    
-    <c:if test="${session_id == board.id}">
-	    <a onclick="deleteBtn()"><div class="list">삭제</div></a>
-	    <a href="/board/bupdate?bno=${board.bno}"><div class="list">수정</div></a>
-    </c:if>
-	
-	<c:if test="${session_id != null}">
-		<a href="/board/breply?bno=${board.bno}"><div class="list">답변달기</div></a>
-	</c:if>
-    
   </section>
-  
-  <script>
-  	function deleteBtn(){
-  		if(confirm("${board.bno}번 게시글을 삭제 하시겠습니까?")) {
-  			location.href="/board/bdelete?bno=${board.bno}";
-  		}
-  	}
-  	
-  	if("${flag}" == "3"){
-	  	alert("게시글이 수정되었습니다.");
-	}	  
-  </script>
 
   <footer>
     <div class="wrapper">

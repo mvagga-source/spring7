@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.java.dao.BoardMapper">
+
+	<!-- 게시글 전체 가져오기 -->
+
+	<select id="selectAllCount" resultType="int">
+		select count(*) from board 
+	</select>
+
+	<select id="selectAll" resultType="com.java.dto.BoardDto">
+		<!-- select * from board order by bgroup desc, bstep asc -->
+		
+		select * from (select row_number() over (order by bgroup desc, bstep asc) rnum, a.* from board a) where rnum between #{startRow} and #{endRow} 
+	</select>
+	
+	<select id="selectSearch" resultType="com.java.dto.BoardDto">
+	
+		select * from board
+		
+		<!-- 
+		<if test="category == 'btitle'"> 
+		where btitle like '%'||#{searchValue}||'%'
+		</if>
+		<if test="category == 'bcontent'"> 
+		where bcontent like '%'||#{searchValue}||'%'
+		</if>
+		 -->
+		
+		<if test="category == 'btitle' or category == 'bcontent' "> 
+		where ${category} like '%'||#{searchValue}||'%'
+		</if>		
+		
+		<if test="category == 'all'"> 
+		where btitle like '%'||#{searchValue}||'%' or bcontent like '%'||#{searchValue}||'%'
+		</if>
+		
+		order by bgroup desc, bstep asc 
+	</select>	
+	
+	<select id="selectOne" resultType="com.java.dto.BoardDto">
+		select * from board where bno = #{bno}
+	</select>
+	
+
+	<!-- 
+	<select id="selectPrev" resultType="com.java.dto.BoardDto">
+		<![CDATA[
+			select * from (select * from board where bno < #{bno} order by bgroup desc) where rownum = 1	
+		]]>
+	</select>
+	
+	
+	<select id="selectOnePrev" resultType="board" parameterType="board">
+		select * from board
+		where bno =
+		(
+			select prev_no from(
+			select bno, lead(bno,1,-1) over(order by bgroup desc, bstep asc) prev_no from board
+			)where bno = #{bno}
+		);
+	  </select>
+	
+	  <select id="selectOneNext" resultType="board" parameterType="board">
+		select * from board
+		where bno =
+		(
+			select next_no from(
+			select bno, lag(bno,1,-1) over(order by bgroup desc, bstep asc) next_no from board
+			)where bno = #{bno}
+		);
+	  </select>	
+	 -->
+	 
+	<update id="updateBoard">
+		update board set btitle=#{btitle},bcontent=#{bcontent},bfile=#{bfile},bdate=sysdate where bno=#{bno}
+	</update>
+	
+	<insert id="insertBoard">
+		insert into board values (board_seq.nextval,#{btitle},#{bcontent},#{id},board_seq.currval,0,0,0,'',sysdate)
+	</insert>
+	
+	<!-- 
+		< or > 사용시
+			
+	<![CDATA[
+	
+	]]>
+	
+	 -->
+	<update id="updateReply">
+		update board set bstep = bstep+1 where bgroup = #{bgroup} and bstep>#{bstep}
+	</update>
+	
+	<insert id="insertReply">
+		insert into board values (board_seq.nextval,#{btitle},#{bcontent},#{id},#{bgroup},#{bstep}+1,#{bindent}+1,0,'',sysdate)
+	</insert>	
+	
+	<!-- 
+	<insert id="insertReply">
+		insert into board values (board_seq.nextval,#{btitle},#{bcontent},#{id},#{bgroup},(select max(bstep)+1 from board where group=#{bgroup}),#{bindent}+1,0,'',sysdate)
+	</insert>
+	 -->		
+	
+	<delete id="deleteBoard">
+		delete from board where bno = #{bno}
+	</delete>
+	
+</mapper>

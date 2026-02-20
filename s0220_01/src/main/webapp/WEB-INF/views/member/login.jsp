@@ -8,32 +8,51 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Pages - Login</title>
+  <script src="http://code.jquery.com/jquery-latest.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Noto+Sans+KR:400,500,700,900&display=swap&subset=korean" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/css/read.css">
+  <link rel="stylesheet" href="/css/login.css">
+  <script>
+  
+    $(function(){
+       $(".save").click(function(){
+            $(this).toggleClass("on");
+       })
+    })
+    
+    function loginBtn(){
+    	
+    	var id = $("#id").val();
+    	if(id == null || id ==""){
+    		alert("아이디 및 비밀번호를 입력하셔야 로그인이 가능합니다.");
+    		$("#id").focus();
+    		return;
+    	}
+    	login.submit();
+    }
+    
+    if("${flag}" == "2"){
+    	alert("아이디 또는 비밀번호 불일치");
+    	location.href="/member/login";
+    }    
+
+  </script>
 </head>
 
 <body>
   <header>
     <ul>
-		<c:if test="${session_id == null}">
-			<li><a href="/member/join01">회원가입</a></li><span>|</span>
-			<li><a href="/member/login">로그인</a></li><span>|</span>
-		</c:if>
-		<c:if test="${session_id != null}">
-			<li><a href="/member/mupdate">${session_name}님</a></li><span>|</span>
-			<li><a onclick="logoutBtn()">로그아웃</a></li><span>|</span>
-		</c:if>
-		<li><a href="/board/blist">고객행복센터</a></li><span>|</span>
+      <li>회원가입</li> <span>|</span>
+      <li>로그인</li> <span>|</span>
+      <li>고객행복센터</li> <span>|</span>
       <li>배송지역검색</li> <span>|</span>
       <li>기프트카드 등록</li>
     </ul>
   </header>
 
   <nav>
-    <div class="logo"></div>
+    <a href="/"><div class="logo"></div></a>
 
     <div id="search">
       <div class="search"></div><br>
@@ -57,54 +76,53 @@
   </nav>
 
   <section>
-    <h1>NOTICE</h1>
+    <h1>로그인</h1>
 
-    <table>
-      <tr>
-        <th>${board.btitle}</th>
-      </tr>
-      <tr>
-        <td>
-	        <fmt:formatDate value="${board.bdate}" pattern="yyyy-MM-dd"/>
-        </td>
-      </tr>
-      <tr>
-        <td class="article">
-${board.bcontent}
-        </td>
-      </tr>
-      <tr>
-        <td><strong>다음글</strong> <span class="separator">|</span> [키즈잼] 2월 프로그램 안내</td>
-      </tr>
-      <tr>
-        <td><strong>이전글</strong> <span class="separator">|</span> [키즈잼] 2020년 1분기 정기 휴관일 안내</td>
-      </tr>
-    </table>
+    <article id="category">
+      <ul>
+        <li class="selected">회원 로그인</li>
+        <li>비회원 주문조회</li>
+      </ul>  
+    </article>
 
-    <a onclick="javascript:history.back();"><div class="list">목록</div></a>
-    
-    <c:if test="${session_id == board.id}">
-	    <a onclick="deleteBtn()"><div class="list">삭제</div></a>
-	    <a href="/board/bupdate?bno=${board.bno}"><div class="list">수정</div></a>
-    </c:if>
-	
-	<c:if test="${session_id != null}">
-		<a href="/board/breply?bno=${board.bno}"><div class="list">답변달기</div></a>
-	</c:if>
-    
-  </section>
+    <form action="/member/login" name="login" method="post">
+      <div class="id">
+        <input type="text" id="id" name="id" value="${cookie.cookie_id.value}" size="30" placeholder="CJ ONE 통합아이디 6~20자">
+      </div>
+      <div class="pw">
+        <input type="text" id="pw" name="pw" size="45" placeholder="비밀번호 영문, 특수문자, 숫자혼합 8~12자">
+      </div>
+
+      <div id="save">
+        <input type="checkbox" id="saveChk" name="saveId" value="saveId"
+        <c:if test="${not empty cookie.cookie_id}">checked</c:if>
+        >
+
+        <label for="saveChk"></label>
+        <span>아이디 저장</span>
+      </div>
   
-  <script>
-  	function deleteBtn(){
-  		if(confirm("${board.bno}번 게시글을 삭제 하시겠습니까?")) {
-  			location.href="/board/bdelete?bno=${board.bno}";
-  		}
-  	}
-  	
-  	if("${flag}" == "3"){
-	  	alert("게시글이 수정되었습니다.");
-	}	  
-  </script>
+      <div id="find">
+        <span>아이디 찾기</span> <span class="separator">|</span> <span>비밀번호 찾기</span>
+      </div>
+
+      <!-- <button type="submit">로그인</button> -->
+      <button type="button" onclick="loginBtn()">로그인</button>
+    </form>
+
+    <ul class="login-icons">
+      <li class="phone"></li>
+      <li class="kakao"></li>
+      <li class="naver"></li>
+      <li class="facebook"></li>
+    </ul>
+
+    <div class="sign-up-info">
+      <h3>CJ ONE 통합회원이 아니신가요?</h3>
+      <p>CJ ONE 통합회원으로 가입하시면 CJ제일제당의 다양한 서비스(COOKIT, CJ THE MARKET, CJ제일제당 홈페이지)를 이용하실 수 있습니다.</p>
+      <div class="sign-up">CJ ONE 통합회원 신규가입하기 <div class="arrow">&emsp;</div></div>
+    </div>
+  </section>
 
   <footer>
     <div class="wrapper">
