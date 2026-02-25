@@ -18,4 +18,10 @@ public interface MemberService {
 	// 회원삭제
 	void deleteById(MemberDto mDto);
 
+	// 회원정보 상세보기
+	MemberDto findById(MemberDto mDto);
+
+	// 회원정보 수정 저장
+	void update(MemberDto mDto);
+
 }

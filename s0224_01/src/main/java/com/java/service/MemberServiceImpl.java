@@ -24,14 +24,15 @@ public class MemberServiceImpl implements MemberService {
 		
 		// find = select, by = where 
 		MemberDto memberDto = memberRepository.findByIdAndPw(mDto.getId(), mDto.getPw())
-//				.get() //에러처리를 하지 앖음
-				//.orElseGet(()->{return new MemberDto();}) // 기본객체 넘겨줌
-//				.orElse(null)
-//				.orElseThrow(()->{return new IllegalArgumentException("검색데이터가 없음");}) // 함수를 매개변수로 전달 / 람다식
-				.orElseThrow(
-						()->{return new IllegalArgumentException("에러");});
-				;
+//				.get(); //에러처리를 하지 앖음
+				//.orElseGet(()->{return new MemberDto();}); // 기본객체 넘겨줌
+				.orElse(null);
+//				.orElseThrow(()->{return new IllegalArgumentException("검색데이터가 없음");}); // 함수를 매개변수로 전달 / 람다식
+//				.orElseThrow(
+//						()->{return new IllegalArgumentException("에러");});
 
+		// 지정하는 이름방식을 따르지 않을 경우
+//		MemberDto memberDto = memberRepository.selectLogin(mDto.getId(), mDto.getPw()).orElse(null);
 		return memberDto;
 	}
 
@@ -52,7 +53,8 @@ public class MemberServiceImpl implements MemberService {
 		
 		return list;
 	}
-
+	
+	@Transactional
 	@Override // 회원가입 저장
 	public void save(MemberDto mDto) {
 		MemberDto result = memberRepository.save(mDto);
@@ -63,6 +65,31 @@ public class MemberServiceImpl implements MemberService {
 	@Override // 회원삭제
 	public void deleteById(MemberDto mDto) {
 		memberRepository.deleteById(mDto.getId());
+		
+	}
+
+	@Override
+	public MemberDto findById(MemberDto mDto) {
+		MemberDto memberDto = memberRepository.findById(mDto.getId())
+				.orElse(null);
+		return memberDto;
+	}
+
+	@Transactional
+	@Override
+	public void update(MemberDto mDto) {
+		
+		// 수정1. 검색후 검색된 데이터에 값변경
+		//@Transactional 자동저장 처리함		
+//		MemberDto memberDto = memberRepository.findById(mDto.getId())
+//				.orElse(null);
+//		memberDto.setPhone(mDto.getPhone());
+//		memberDto.setEmail(mDto.getEmail());
+//		memberDto.setGender(mDto.getGender());
+//		memberDto.setHobby(mDto.getHobby());
+		
+		// 수정2. save() / 아이디가 없으면 insert, 아이디가 있으면 update
+		memberRepository.save(mDto);
 		
 	}
 	

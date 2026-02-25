@@ -3,9 +3,19 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+  
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+	<c:if test="${session_id == null}">
+		<script>
+			alert("로그인을 하셔야 회원정보를 확인할수 있습니다.");
+			location.href="/member/login";
+		</script>
+	</c:if>
+	
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>VLAST Shop - 전체회원리스트</title>
@@ -252,7 +262,7 @@
       <c:forEach var="member" items="${list}">
         <tr>
           <td>${member.id }</td>
-          <td class="title"><a href="#">${member.name }</a></td>
+          <td class="title"><a href="/member/mview?id=${member.id}">${member.name }</a></td>
           <td>${member.phone }</td>
           <td class="date">${member.mdate }</td>
           <td class="views">${member.hobby }</td>
@@ -268,19 +278,33 @@
     <script>
     	$(function(){
     		$(document).on("click",".delBtn", function(){
+    			const tr = $(this).closest("tr");
     			const id = $(this).closest("tr").children("td").eq(0).text();
     			console.log(id);
 				if(confirm("회원을 삭제 하시겠습니까?")){
 					//get 방식
-					location.href="/member/delete?id="+id;
+					//location.href="/member/delete?id="+id;
+					$.ajax({
+						url:"/member/mdelete", // insert - post, update - put, delete - delete
+						type:"delete",
+						data:{"id":id},
+						dataType:"text", // 리턴타입 : text, json, xml
+						success:function(data){
+							console.log(data);
+							alert(id+" 회원이 삭제되었습니다.");
+							tr.remove();
+						},
+						error:function(){
+							alert("실패");
+						}
+					});//ajax
 				}
 				
     		});
     	});
     
     </script>
-    
-    
+
     
     <!-- Pagination & Search -->
     <div class="board-footer" >
