@@ -1,3 +1,16 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+<c:if test="${session_id == null}">
+	<script>
+		alert("로그인을 하셔야 글쓰기가 가능합니다.");
+		location.href="/member/login";
+	</script>
+</c:if>
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -126,10 +139,15 @@
   <!-- 글쓰기 폼 -->
   <div class="write-container">
     <div class="write-title">게시글 작성</div>
-    <form class="write-form" id="writeForm">
-      <input type="text" id="writer" placeholder="작성자" maxlength="20" required />
-      <input type="text" id="title" placeholder="제목" maxlength="100" required />
-      <textarea id="content" placeholder="내용을 입력하세요." maxlength="2000" required></textarea>
+    <form action="/board/bwrite" method="post" name="bfrm" class="write-form" id="writeForm" enctype="multipart/form-data">
+      <input type="text" id="writer" value="${session_id}" readonly placeholder="작성자" maxlength="20" required />
+      <input type="text" id="title" name="btitle" placeholder="제목" maxlength="100" required />
+      <textarea id="content" name="bcontent" placeholder="내용을 입력하세요." maxlength="2000" required></textarea>
+      <input type="file" name="file" onchange="readUrl(this)" />
+	  <div>
+	  	<img id="preView" style="width:300px;">
+	  	
+	  </div>
 
       <div class="write-buttons">
         <button type="submit">등록</button>
@@ -144,6 +162,22 @@
   </footer>
 
   <script>
+  	
+  function readUrl(input){
+	  if(input.files && input.files[0]){
+		  var reader = new FileReader();
+		  reader.onload = function(e){
+			  document.getElementById("preView").src=e.target.result;
+		  }
+		  reader.readAsDataURL(input.files[0]);
+	  }else{
+		  document.getElementById("preView").src="";
+	  }
+  }
+  
+  
+  
+  
     const writeForm = document.getElementById('writeForm');
 
     writeForm.addEventListener('submit', (e) => {
@@ -162,7 +196,8 @@
       alert('게시글이 등록되었습니다.');
 
       // 예시: 목록 페이지로 이동
-      window.location.href = 'board.html';
+      //window.location.href = '/board/bwrite';
+      bfrm.submit();
     });
   </script>
 </body>

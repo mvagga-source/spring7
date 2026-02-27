@@ -171,7 +171,9 @@
         <button type="submit" class="btn btn-login">로그인</button>
         <br>
         <div class="idsave">
-          <input type="checkbox" id="rememberId" name="rememberId" value="rememberId" >
+          <input type="checkbox" id="rememberId" name="rememberId" value="rememberId" 
+          <c:if test="${not empty cookie.cookie_id}">checked</c:if>
+          >
           <label for="rememberId">아이디 저장</label>
         </div>
       </form>

@@ -1,11 +1,27 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+    
+  
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+
+	<c:if test="${session_id == null}">
+		<script>
+			alert("로그인을 하셔야 회원정보를 확인할수 있습니다.");
+			location.href="/member/login";
+		</script>
+	</c:if>
+	
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VLAST Shop - 게시판</title>
+  <title>VLAST Shop - 전체회원리스트</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.0/css/all.min.css" integrity="sha512-10/jx2EXwxxWqCLX/hHth/vu2KY3jCF70dCQB8TSgNjbCVAC/8vai53GfMDrO2Emgwccf2pJqxct9ehpzG+MTw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-  <link href="css/style.css" rel="stylesheet" type="text/css" >  
+  <link href="css/style.css" rel="stylesheet" type="text/css" >
+  <script  src="http://code.jquery.com/jquery-latest.min.js"></script>  
   <style>
     body {
     font-family: 'Arial', sans-serif;
@@ -49,7 +65,7 @@
   /* banner menu */
   a{text-decoration: none; color: inherit;}
   .banner{width:100%; height:320px;
-      background: url('images/bg_topBg1_2.jpg');
+      background: url('/images/bg_topBg1_2.jpg');
   }
   nav{width:100%; height:80px; box-sizing: border-box;
       border-bottom: 1px solid #f0f0f0;
@@ -196,7 +212,6 @@
   }
     
   </style>
-  <script src="https://kit.fontawesome.com/yourcode.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -230,55 +245,67 @@
 
   <!-- Board List -->
   <div class="board-container">
-    <div class="board-title">공지사항</div>
+    <div class="board-title">전체회원리스트</div>
     <table class="board-table">
       <thead>
         <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>작성일</th>
-          <th>조회수</th>
+          <th>아이디</th>
+          <th>이름</th>
+          <th>전화번호</th>
+          <th>일자</th>
+          <th>취미</th>
+          <th>삭제</th>
         </tr>
       </thead>
       <tbody>
+      
+      <c:forEach var="member" items="${list}">
         <tr>
-          <td>5</td>
-          <td class="title"><a href="#">[공지] 추석 연휴 배송 안내</a></td>
-          <td>관리자</td>
-          <td class="date">2025-09-05</td>
-          <td class="views">123</td>
+          <td>${member.id }</td>
+          <td class="title"><a href="/member/mview?id=${member.id}">${member.name }</a></td>
+          <td>${member.phone }</td>
+          <td class="date">${member.mdate }</td>
+          <td class="views">${member.hobby }</td>
+          <td class="views">
+          	<button type="button" class="delBtn">삭제</button>
+          </td>
         </tr>
-        <tr>
-          <td>4</td>
-          <td class="title"><a href="#">9월 신규 회원 이벤트 안내</a></td>
-          <td>운영팀</td>
-          <td class="date">2025-09-01</td>
-          <td class="views">98</td>
-        </tr>
-        <tr>
-          <td>3</td>
-          <td class="title"><a href="#">[점검] 사이트 정기 점검 안내</a></td>
-          <td>관리자</td>
-          <td class="date">2025-08-28</td>
-          <td class="views">211</td>
-        </tr>
-        <tr>
-          <td>2</td>
-          <td class="title"><a href="#">배송비 정책 변경 안내</a></td>
-          <td>관리자</td>
-          <td class="date">2025-08-20</td>
-          <td class="views">156</td>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td class="title"><a href="#">홈페이지 리뉴얼 오픈!</a></td>
-          <td>운영팀</td>
-          <td class="date">2025-08-10</td>
-          <td class="views">324</td>
-        </tr>
+      </c:forEach>
+      
       </tbody>
     </table>
+    
+    <script>
+    	$(function(){
+    		$(document).on("click",".delBtn", function(){
+    			const tr = $(this).closest("tr");
+    			const id = $(this).closest("tr").children("td").eq(0).text();
+    			console.log(id);
+				if(confirm("회원을 삭제 하시겠습니까?")){
+					//get 방식
+					//location.href="/member/delete?id="+id;
+					$.ajax({
+						url:"/member/mdelete", // insert - post, update - put, delete - delete
+						type:"delete",
+						data:{"id":id},
+						dataType:"text", // 리턴타입 : text, json, xml
+						success:function(data){
+							console.log(data);
+							alert(id+" 회원이 삭제되었습니다.");
+							tr.remove();
+						},
+						error:function(){
+							alert("실패");
+						}
+					});//ajax
+				}
+				
+    		});
+    	});
+    
+    </script>
+
+    
     <!-- Pagination & Search -->
     <div class="board-footer" >
         <div class="pagination">
